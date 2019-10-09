@@ -18,13 +18,21 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/ichbinfrog/vulas-utils/internal/restore"
 	"github.com/spf13/cobra"
+)
+
+var (
+	kubeconfig                                                                            string
+	coreNamespace                                                                         string
+	sourceHost, sourceUser, sourcePassword, sourcePort, sourcePath                        string
+	destinationHost, destinationUser, destinationPassword, destinationDb, destinationPort string
 )
 
 // migrateCmd represents the migrate command
 var migrateCmd = &cobra.Command{
 	Use:   "migrate",
-	Short: "A brief description of your command",
+	Short: "Migrate dump to new cluster",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -32,7 +40,43 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("migrate called")
+		fmt.Println(restore.Context{
+			Kubeconfig: kubeconfig,
+			Source: restore.DatabaseAccess{
+				Host:     sourceHost,
+				Port:     sourcePort,
+				User:     sourceUser,
+				Password: sourcePassword,
+				Path:     sourcePath,
+			},
+			Destination: restore.DatabaseAccess{
+				Host:     destinationHost,
+				Port:     destinationPort,
+				User:     destinationUser,
+				Password: destinationPassword,
+				Database: destinationDb,
+			},
+			Namespace: coreNamespace,
+		})
+
+		restore.LoadDumps(&restore.Context{
+			Kubeconfig: kubeconfig,
+			Source: restore.DatabaseAccess{
+				Host:     sourceHost,
+				Port:     sourcePort,
+				User:     sourceUser,
+				Password: sourcePassword,
+				Path:     sourcePath,
+			},
+			Destination: restore.DatabaseAccess{
+				Host:     destinationHost,
+				Port:     destinationPort,
+				User:     destinationUser,
+				Password: destinationPassword,
+				Database: destinationDb,
+			},
+			Namespace: coreNamespace,
+		})
 	},
 }
 
@@ -40,12 +84,15 @@ func init() {
 	rootCmd.AddCommand(migrateCmd)
 
 	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// migrateCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// migrateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	migrateCmd.PersistentFlags().StringVarP(&coreNamespace, "namespace", "n", "vulnerability-assessment-tool-core", "core namespace")
+	migrateCmd.PersistentFlags().StringVar(&sourceHost, "sh", "localhost", "source host for dumps")
+	migrateCmd.PersistentFlags().StringVar(&sourceUser, "su", "postgres", "source user for dumps")
+	migrateCmd.PersistentFlags().StringVar(&sourcePassword, "spw", "postgres", "source password for dumps")
+	migrateCmd.PersistentFlags().StringVar(&sourcePort, "sp", "5432", "source port for dumps")
+	migrateCmd.PersistentFlags().StringVar(&sourcePath, "spa", "/dumps/latest.dump", "source path for dumps")
+	migrateCmd.PersistentFlags().StringVar(&destinationHost, "dh", "localhost", "destination host for dumps")
+	migrateCmd.PersistentFlags().StringVar(&destinationUser, "du", "postgres", "destination user for dumps")
+	migrateCmd.PersistentFlags().StringVar(&destinationPassword, "dpw", "postgres", "destination password for dumps")
+	migrateCmd.PersistentFlags().StringVar(&destinationDb, "dd", "vulas", "destination db for dumps")
+	migrateCmd.PersistentFlags().StringVar(&destinationPort, "dp", "5432", "destination port for dumps")
 }

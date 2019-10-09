@@ -40,12 +40,7 @@ func init() {
 	rootCmd.AddCommand(routeCmd)
 
 	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// routeCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// routeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	routeCmd.PersistentFlags().StringVarP(&coreNamespace, "namespace", "n", "", "core namespace")
+	routeCmd.PersistentFlags().StringVarP(&oldRelease, "oldrelease", "o", "", "old release name")
+	routeCmd.PersistentFlags().StringVarP(&newRelease, "futurerelease", "f", "", "(optional) new release name")
 }

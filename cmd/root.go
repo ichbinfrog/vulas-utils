@@ -25,7 +25,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var (
+	cfgFile string
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -59,6 +61,7 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.utils.yaml)")
+	rootCmd.PersistentFlags().StringVar(&kubeconfig, "kubeconfig", "", "kubecontext to execute query")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

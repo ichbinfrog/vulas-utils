@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/ichbinfrog/vulas-utils/utils/cmd"
+import "github.com/ichbinfrog/vulas-utils/cmd"
 
 func main() {
 	cmd.Execute()

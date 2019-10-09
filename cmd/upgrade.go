@@ -16,36 +16,60 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"log"
 
+	"github.com/ichbinfrog/vulas-migrator/pkg/release"
+	"github.com/ichbinfrog/vulas-utils/internal/promote"
 	"github.com/spf13/cobra"
 )
 
 // upgradeCmd represents the upgrade command
 var upgradeCmd = &cobra.Command{
 	Use:   "upgrade",
-	Short: "A brief description of your command",
+	Short: "Automates upgrades that require schema changes",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("upgrade called")
+		chartDir := args[0]
+
+		if oldRelease == "" {
+			log.Fatal("old release required")
+		}
+
+		if newRelease == "" {
+			newRelease = *release.GenerateNonConflictRelease(&oldRelease)
+			log.Printf("new release name not provided, automatically generated (%s)", newRelease)
+		}
+
+		promote.HelmUpgrade(&promote.Context{
+			OldRelease:     oldRelease,
+			NewRelease:     newRelease,
+			ChartDir:       chartDir,
+			Kubeconfig:     kubeconfig,
+			DryRun:         dryRun,
+			CoreNamespace:  coreNamespace,
+			AdminNamespace: adminNamespace,
+		})
+
 	},
 }
+
+var (
+	oldRelease, newRelease, adminNamespace string
+	dryRun                                 bool
+)
 
 func init() {
 	rootCmd.AddCommand(upgradeCmd)
 
 	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// upgradeCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// upgradeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	upgradeCmd.PersistentFlags().StringVarP(&coreNamespace, "namespace", "n", "", "core namespace")
+	upgradeCmd.PersistentFlags().StringVarP(&oldRelease, "oldrelease", "o", "", "old release name")
+	upgradeCmd.PersistentFlags().StringVarP(&newRelease, "futurerelease", "f", "", "(optional) new release name")
+	upgradeCmd.PersistentFlags().BoolVarP(&dryRun, "dryrun", "d", true, "plans the migration out")
 }
