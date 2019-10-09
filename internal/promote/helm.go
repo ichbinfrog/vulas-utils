@@ -41,14 +41,14 @@ func helmLint(ChartDir string) {
 	}
 }
 
-func helmList(context *Context) error {
+func helmList(release string, namespace string) error {
 	log.Println("Checking for given helm release existence")
-	result, _ := exec.Command("helm3", "ls", "--short", "--namespace", context.CoreNamespace).Output()
+	result, _ := exec.Command("helm3", "ls", "--short", "--namespace", namespace).Output()
 	if checkErr(result) {
 		log.Fatal(string(result))
 	}
-	if !strings.Contains(string(result), context.OldRelease) {
-		log.Fatalf("Did not find given release %s in namespace %s", context.OldRelease, context.CoreNamespace)
+	if !strings.Contains(string(result), release) {
+		log.Fatalf("Did not find given release %s in namespace %s", release, namespace)
 	}
 	log.Printf("Found charts %s", result)
 	return nil
@@ -60,7 +60,7 @@ func HelmUpgrade(context *Context) error {
 	}
 
 	helmLint(".")
-	if listErr := helmList(context); listErr != nil {
+	if listErr := helmList(context.OldRelease, context.CoreNamespace); listErr != nil {
 		return listErr
 	}
 

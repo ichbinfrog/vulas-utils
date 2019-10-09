@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
+	"os/exec"
 
 	"gopkg.in/yaml.v3"
 )
@@ -40,16 +42,32 @@ func alterWatch(src, dst, nextRelease string, overwrite bool) error {
 	return nil
 }
 
-func Reroute(context *Context) {
+func Reroute(context *Context) error {
+	if err := os.Chdir(context.ChartDir); err != nil {
+		return err
+	}
 	valuesName := "values.yaml"
 	currentName := context.OldRelease + "-values.yaml"
-	futureName := context.NewRelease + "-values.yaml"
 
 	if ok := fileExists(&valuesName); ok {
 		backup(valuesName, currentName, true)
-		backup(valuesName, futureName, true)
-		alterWatch(futureName, valuesName, context.NewRelease, true)
+		alterWatch(currentName, valuesName, context.NewRelease, true)
 	} else {
 		log.Fatal("values.yaml not found")
 	}
+
+	helmLint(".")
+	if listErr := helmList(context.OldRelease, context.AdminNamespace); listErr != nil {
+		return listErr
+	}
+	if listErr := helmList(context.NewRelease, context.CoreNamespace); listErr != nil {
+		return listErr
+	}
+
+	log.Printf("Upgrading old release %s", context.OldRelease)
+	result, _ := exec.Command("helm3", "upgrade", context.OldRelease, ".").Output()
+	if checkErr(result) {
+		log.Fatal(string(result))
+	}
+	return nil
 }
