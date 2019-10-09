@@ -1,8 +1,9 @@
 
-[![Go Report Card](https://goreportcard.com/badge/ichbinfrog/vulas-utils)](https://goreportcard.com/report/github.com/ichbinfrog/vulas-utils) 
+[![Go Report Card](https://goreportcard.com/badge/ichbinfrog/vulas-utils)](https://goreportcard.com/report/github.com/ichbinfrog/vulas-utils)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/ichbinfrog/vulas-utils/blob/master/LICENSE)
 [![GoDoc](https://godoc.org/github.com/ichbinfrog/vulas-utils?status.svg)](https://godoc.org/github.com/ichbinfrog/vulas-utils)
 [![GoVersion](https://img.shields.io/badge/goversion-1.13.1-brightgreen.svg)](https://github.com/gojp/goreportcard/blob/master/LICENSE)
+[![Build Status](https://travis-ci.com/ichbinfrog/vulas-utils.svg?branch=master)](https://travis-ci.com/ichbinfrog/vulas-utils)
 
 # Vulas-utils
 
