@@ -8,6 +8,7 @@ import (
 	"k8s.io/client-go/util/homedir"
 )
 
+// GetClient returns a kubernetes client built from a kubeconfig string
 func GetClient(kubeconfig string) (*kubernetes.Clientset, error) {
 	if kubeconfig == "" {
 		if home := homedir.HomeDir(); home != "" {

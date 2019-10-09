@@ -1,3 +1,5 @@
+// Package promote provides a module to promote a pod from the vulnerability-assessment-tool-core
+// chart into a new release in order to allow for a migration with schema changes
 package promote
 
 import (
@@ -9,6 +11,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Context passed onto the promotion subcommand
 type Context struct {
 	OldRelease     string `yaml:"oldRelease"`
 	NewRelease     string `yaml:"newRelease"`

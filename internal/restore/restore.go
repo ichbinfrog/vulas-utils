@@ -8,8 +8,8 @@ import (
 
 	"time"
 
-	"github.com/ichbinfrog/vulas-migrator/pkg/connect"
-	"github.com/ichbinfrog/vulas-migrator/pkg/convert"
+	"github.com/ichbinfrog/vulas-utils/pkg/connect"
+	"github.com/ichbinfrog/vulas-utils/pkg/convert"
 	batchv1 "k8s.io/api/batch/v1"
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -17,6 +17,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
+// Context passed for the restore command
 type Context struct {
 	Kubeconfig  string         `yaml:"kubeconfig"`
 	Source      DatabaseAccess `yaml:"source,omitempty"`
@@ -25,6 +26,7 @@ type Context struct {
 	Purge       bool           `yaml:"purge"`
 }
 
+// DatabaseAccess to model the source and destination accesses
 type DatabaseAccess struct {
 	Host     string `yaml:"host"`
 	Port     string `yaml:"port"`
@@ -186,6 +188,7 @@ func getPodLogs(pod apiv1.Pod) (string, error) {
 	return str, nil
 }
 
+// LoadDumps loads a dump according to the context passed
 func LoadDumps(context *Context) {
 	jobClient := clientset.BatchV1().Jobs(context.Namespace)
 	job := createJob(context)

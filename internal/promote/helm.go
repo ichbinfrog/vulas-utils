@@ -54,6 +54,7 @@ func helmList(release string, namespace string) error {
 	return nil
 }
 
+// HelmUpgrade performs the upgrade with schema migration
 func HelmUpgrade(context *Context) error {
 	if err := os.Chdir(context.ChartDir); err != nil {
 		return err

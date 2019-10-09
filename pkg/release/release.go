@@ -28,6 +28,7 @@ func generateReleaseName() *string {
 	return &names[rand.Intn(len(names))]
 }
 
+// GenerateNonConflictRelease generates a releasename different from the old one
 func GenerateNonConflictRelease(oldRelease *string) *string {
 	for {
 		name := generateReleaseName()

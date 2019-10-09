@@ -1,10 +1,12 @@
+// Package isolate provides a module to isolate a pod from the vulnerability-assessment-tool-core
+// chart into a new release in order to allow for a migration with schema changes
 package isolate
 
 import (
 	"fmt"
 	"log"
 
-	"github.com/ichbinfrog/vulas-migrator/pkg/convert"
+	"github.com/ichbinfrog/vulas-utils/pkg/convert"
 	batchv1 "k8s.io/api/batch/v1"
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

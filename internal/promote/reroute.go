@@ -42,6 +42,8 @@ func alterWatch(src, dst, nextRelease string, overwrite bool) error {
 	return nil
 }
 
+// Reroute modifies the vulnerability-assessment-tool-admin chart to point the
+// ingress controller to serve the newest release
 func Reroute(context *Context) error {
 	if err := os.Chdir(context.ChartDir); err != nil {
 		return err

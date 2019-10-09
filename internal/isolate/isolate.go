@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/ichbinfrog/vulas-migrator/pkg/connect"
-	"github.com/ichbinfrog/vulas-migrator/pkg/convert"
+	"github.com/ichbinfrog/vulas-utils/pkg/connect"
+	"github.com/ichbinfrog/vulas-utils/pkg/convert"
 	v1 "k8s.io/api/apps/v1"
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -96,6 +96,8 @@ func scaleDown(name *string, namespace *string) error {
 	return nil
 }
 
+// Isolate helps scale down replicas for the postgres slaves whilst also keeping
+// old PersistentVolumeClaim for optimal migration speed
 func Isolate(name *string, namespace *string) *string {
 	pod, _ := getPods(name, namespace)
 	if pod == nil {

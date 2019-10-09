@@ -1,0 +1,11 @@
+
+bugs:
+- reference: "CVE-2018-8013"
+  repo: "https://github.com/apache/batik/"
+  commit: "f91125b26a6ca2b7a1195f1842360bed03629839:master"
+  links: "https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2018-8013,https://xmlgraphics.apache.org/security.html"
+- reference: "AMQP-590"
+  repo: "https://github.com/spring-projects/spring-amqp"
+  commit: "462dcb6f1f93d54923daffb9729c1c8519576c08:master,4150f107e60cac4a7735fcf7cb4c1889a0cbab6:1.5.x"
+  description: "Deserialization vulnerability. Add Class/Package White List to Deserializing Message Converters. Related to CVE-2016-6194. Fixed in 1.6 M2, 1.5.5 (see https://jira.spring.io/browse/AMQP-590)"
+  links: "https://github.com/spring-projects/spring-amqp/pull/388"
