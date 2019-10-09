@@ -12,10 +12,4 @@ lint:
 	find . -name '*.go' | xargs gofmt -w -s
 
 test:
-	 go test -cover ./check ./handlers
-
-start:
-	 go run main.go
-
-misspell:
-	find . -name '*.go' -not -path './vendor/*' -not -path './_repos/*' | xargs misspell -error
+	 go test -cover
