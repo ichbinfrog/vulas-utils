@@ -69,7 +69,8 @@ bugs:
 			Source:      sourceFile,
 			ReleaseName: releaseName,
 			Namespace:   coreNamespace,
-			DryRun:      dryRun,
+			DryRun:      noUpload,
+			Skip:        skipIfExist,
 		}
 		list, _ := load.SplitCVE(&context)
 		load.UploadBugs(&context, list)
@@ -77,8 +78,9 @@ bugs:
 }
 
 var (
-	releaseName string
-	concurrent  int
+	releaseName           string
+	concurrent            int
+	skipIfExist, noUpload bool
 )
 
 func init() {
@@ -88,5 +90,6 @@ func init() {
 	loadCmd.PersistentFlags().StringVarP(&coreNamespace, "namespace", "n", "vulnerability-assessment-tool-core", "core namespace")
 	loadCmd.PersistentFlags().IntVarP(&concurrent, "concurrent", "c", 5, "amount of parallel jobs handling the load")
 	loadCmd.PersistentFlags().StringVarP(&releaseName, "release", "r", "canary", "release name of core chart")
-	loadCmd.PersistentFlags().BoolVarP(&dryRun, "dry-run", "d", true, "does not upload to the backend")
+	loadCmd.PersistentFlags().BoolVarP(&noUpload, "dry-run", "d", false, "does not upload to the backend")
+	loadCmd.PersistentFlags().BoolVarP(&skipIfExist, "skip", "s", false, "skip if already exists")
 }

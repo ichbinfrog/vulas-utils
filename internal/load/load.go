@@ -52,9 +52,9 @@ func getCVEList(source *string) ([]CVE, error) {
 
 	cveList := make(map[string][]CVE)
 	if unmarshallErr := yaml.Unmarshal(yamlFile, cveList); unmarshallErr != nil {
+		fmt.Println(unmarshallErr)
 		return nil, unmarshallErr
 	}
-
 	if cveList["bugs"] != nil {
 		return cveList["bugs"], nil
 	}
@@ -154,7 +154,6 @@ func getChunkName(chunkID int) string {
 func getBackendService(release *string) string {
 	return *release + "-restbackend:8091/backend"
 }
-
 func getLoaderCommand(bugs []CVE, context *Context) string {
 	patcheval := `
 #!/bin/sh
@@ -162,7 +161,7 @@ func getLoaderCommand(bugs []CVE, context *Context) string {
 	for _, bug := range bugs {
 		patcheval = patcheval + fmt.Sprintf(`
 java -Dvulas.shared.backend.serviceUrl=http://%s \
-      -jar patch-analyzer-3.1.6.jar com.sap.psr.vulas.PatchAnalyzer \
+      -jar patch-analyzer-3.1.6.jar com.sap.psr.vulas.patcha.PatchAnalyzer \
       -b %s \
       -r %s \
       -e %s \
