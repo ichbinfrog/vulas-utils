@@ -25,13 +25,11 @@ import (
 // routeCmd represents the route command
 var routeCmd = &cobra.Command{
 	Use:   "route",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "reconfigures the admin chart",
+	Long: `This subcommand allows for upgrading the vulnerability assessment tool
+admin chart hosted on k8s to serve the latest release. In short, this upgrade
+the ingresses (not the entire chart along with the NGINX Ingress controller) allowing
+for a ~zero downtime upgrade.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		chartDir := args[0]

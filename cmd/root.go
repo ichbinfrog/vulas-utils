@@ -32,13 +32,9 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "utils",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "utility CLI for managing vulas in k8s",
+	Long: `This command allows for an user with access to a kubernetes cluster hosting
+the vulnerability assessment tool helm chart to automate part of that management`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },

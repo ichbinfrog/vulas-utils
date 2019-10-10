@@ -18,8 +18,8 @@ package cmd
 import (
 	"log"
 
-	"github.com/ichbinfrog/vulas-utils/pkg/release"
 	"github.com/ichbinfrog/vulas-utils/internal/promote"
+	"github.com/ichbinfrog/vulas-utils/pkg/release"
 	"github.com/spf13/cobra"
 )
 

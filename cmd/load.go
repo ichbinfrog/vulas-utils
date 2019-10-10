@@ -13,6 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+// Package cmd provides a cli module to interact with vulas-utils
 package cmd
 
 import (
@@ -32,7 +34,16 @@ assessement tool database hosted inside a kubernetes cluster.
 
 In short, in creates a number of concurrent go routines which launch and watch a series
 of jobs, each in charge of loading a small chunk of the given bugs (thus allowing for more
-efficient loading)`,
+efficient loading). As of this release, files must be a yaml file following this structure:
+
+bugs:
+- reference: { bug cve } ( vulnerability identifier )
+	repo: { github repo } ( URL of the VCS repository hosting the library project )
+	commit: { commit id } ( One or multiple revisions (multiple ones must be comma-separated w/o blanks).
+													In the case of Git repositories, the revision can be optionally concatenated with )
+	links: { optional links to cve ref } ( Comma-separated list of links to comprehensive vulnerability information
+												(optional, it must be provided for vulnerabilities not available from the NVD) )
+`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 

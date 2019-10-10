@@ -104,7 +104,7 @@ func UploadBugs(context *Context, bugs [][]CVE) {
 	}
 	wg.Wait()
 
-	for chunkID, _ := range bugs {
+	for chunkID := range bugs {
 		wg.Add(1)
 		fmt.Printf("Chunk %d: Watching for events\n", chunkID)
 		// Watches job for completion
