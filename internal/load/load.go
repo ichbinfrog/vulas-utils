@@ -152,7 +152,7 @@ func getChunkName(chunkID int) string {
 }
 
 func getBackendService(release *string) string {
-	return *release + "-restbackend-service:8091/backend"
+	return *release + "-restbackend:8091/backend"
 }
 
 func getLoaderCommand(bugs []CVE, context *Context) string {
