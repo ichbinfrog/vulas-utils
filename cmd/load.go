@@ -16,6 +16,9 @@ limitations under the License.
 package cmd
 
 import (
+	"log"
+	"os"
+
 	"github.com/ichbinfrog/vulas-utils/internal/load"
 	"github.com/spf13/cobra"
 )
@@ -23,35 +26,56 @@ import (
 // loadCmd represents the load command
 var loadCmd = &cobra.Command{
 	Use:   "load",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "command to populate vulnerability database",
+	Long: `This subcommand allows for an user to load cve datas into the vulnerability
+assessement tool database hosted inside a kubernetes cluster.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+In short, in creates a number of concurrent go routines which launch and watch a series
+of jobs, each in charge of loading a small chunk of the given bugs (thus allowing for more
+efficient loading)`,
+	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+
+		sourceFile := args[0]
+		if _, err := os.Stat(sourceFile); err != nil {
+			log.Fatal(err)
+		}
+
+		if concurrent <= 1 {
+			log.Fatalf("Concurrent values cannot be less then 1")
+		}
+
+		if releaseName == "" {
+			log.Fatalf("Release name cannot be empty")
+		}
+
+		if coreNamespace == "" {
+			log.Fatalf("Namespace cannot be empty")
+		}
+
 		context := load.Context{
-			Concurrent:  1,
-			Source:      "tests/bugs.yaml",
-			ReleaseName: "canary",
-			Namespace:   "steady-core",
+			Concurrent:  concurrent,
+			Source:      sourceFile,
+			ReleaseName: releaseName,
+			Namespace:   coreNamespace,
+			DryRun:      dryRun,
 		}
 		list, _ := load.SplitCVE(&context)
 		load.UploadBugs(&context, list)
 	},
 }
 
+var (
+	releaseName string
+	concurrent  int
+)
+
 func init() {
 	rootCmd.AddCommand(loadCmd)
 
 	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// loadCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// loadCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	loadCmd.PersistentFlags().StringVarP(&coreNamespace, "namespace", "n", "vulnerability-assessment-tool-core", "core namespace")
+	loadCmd.PersistentFlags().IntVarP(&concurrent, "concurrent", "c", 5, "amount of parallel jobs handling the load")
+	loadCmd.PersistentFlags().StringVarP(&releaseName, "release", "r", "canary", "release name of core chart")
+	loadCmd.PersistentFlags().BoolVarP(&dryRun, "dry-run", "d", true, "does not upload to the backend")
 }
