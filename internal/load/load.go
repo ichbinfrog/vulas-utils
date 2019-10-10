@@ -161,7 +161,7 @@ func getLoaderCommand(bugs []CVE, context *Context) string {
   `
 	for _, bug := range bugs {
 		patcheval = patcheval + fmt.Sprintf(`
-java -Dvulas.shared.backend.serviceUrl=%s \
+java -Dvulas.shared.backend.serviceUrl=http://%s \
       -jar patch-analyzer-3.1.6.jar com.sap.psr.vulas.PatchAnalyzer \
       -b %s \
       -r %s \
