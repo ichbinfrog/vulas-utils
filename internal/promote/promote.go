@@ -30,7 +30,7 @@ func fileExists(name *string) bool {
 }
 
 func backup(src, dst string, overwrite bool) error {
-	log.Printf("Backing up file %s into %s", src, dst)
+	fmt.Printf("Backing up file %s into %s\n", src, dst)
 	srcFile, readErr := ioutil.ReadFile(src)
 	if readErr != nil {
 		return readErr
@@ -48,7 +48,7 @@ func backup(src, dst string, overwrite bool) error {
 }
 
 func alterValues(src, dst, claimName string, overwrite bool) error {
-	log.Printf("Rotating values from file %s to %s", src, dst)
+	fmt.Printf("Rotating values from file %s to %s\n", src, dst)
 	yamlFile, err := ioutil.ReadFile(src)
 	if err != nil {
 		return err

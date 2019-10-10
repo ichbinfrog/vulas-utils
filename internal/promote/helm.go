@@ -15,9 +15,9 @@ func checkPrereqs() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("helm binary found on path %s", path)
+	fmt.Printf("helm binary found on path %s\n", path)
 	result, _ := exec.Command("helm3", "version", "--short").Output()
-	log.Printf("current helm version %s", string(result))
+	fmt.Printf("current helm version %s\n", string(result))
 	if !strings.Contains(string(result), "v3") {
 		log.Fatal("requires helm 3")
 	}
@@ -34,7 +34,7 @@ func checkErr(result []byte) bool {
 }
 
 func helmLint(ChartDir string) {
-	log.Println("Checking if new chart is valid")
+	fmt.Println("Checking if new chart is valid")
 	result, _ := exec.Command("helm3", "lint", ChartDir).Output()
 	if checkErr(result) {
 		log.Fatal(string(result))
@@ -42,7 +42,7 @@ func helmLint(ChartDir string) {
 }
 
 func helmList(release string, namespace string) error {
-	log.Println("Checking for given helm release existence")
+	fmt.Println("Checking for given helm release existence")
 	result, _ := exec.Command("helm3", "ls", "--short", "--namespace", namespace).Output()
 	if checkErr(result) {
 		log.Fatal(string(result))
@@ -50,7 +50,7 @@ func helmList(release string, namespace string) error {
 	if !strings.Contains(string(result), release) {
 		log.Fatalf("Did not find given release %s in namespace %s", release, namespace)
 	}
-	log.Printf("Found charts %s", result)
+	fmt.Printf("Found charts %s\n", result)
 	return nil
 }
 
@@ -69,7 +69,7 @@ func HelmUpgrade(context *Context) error {
 	claimName := isolate.Isolate(&statefulsetName, &context.CoreNamespace)
 	if claimName != nil {
 		replaceFiles(context, *claimName)
-		log.Printf("Installing new release %s", context.NewRelease)
+		fmt.Printf("Installing new release %s\n", context.NewRelease)
 		result, _ := exec.Command("helm3", "install", context.NewRelease, ".").Output()
 		if checkErr(result) {
 			log.Fatal(string(result))

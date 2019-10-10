@@ -11,7 +11,7 @@ import (
 )
 
 func alterWatch(src, dst, nextRelease string, overwrite bool) error {
-	log.Printf("Rotating values from file %s to %s", src, dst)
+	fmt.Printf("Rotating values from file %s to %s\n", src, dst)
 	yamlFile, err := ioutil.ReadFile(src)
 	if err != nil {
 		return err
@@ -66,7 +66,7 @@ func Reroute(context *Context) error {
 		return listErr
 	}
 
-	log.Printf("Upgrading old release %s", context.OldRelease)
+	fmt.Printf("Upgrading old release %s\n", context.OldRelease)
 	result, _ := exec.Command("helm3", "upgrade", context.OldRelease, ".").Output()
 	if checkErr(result) {
 		log.Fatal(string(result))

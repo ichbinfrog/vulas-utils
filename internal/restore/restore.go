@@ -202,18 +202,18 @@ func LoadDumps(context *Context) {
 		log.Fatal(err)
 	}
 
-	log.Printf("Migration launched")
+	fmt.Println("Migration launched")
 	// Get pods associated with this job
 	labelSelector := fmt.Sprintf("app.kubernetes.io/name=database-migrator")
 
-	log.Printf("Sleeping for 10s to wait for pod to spin up")
+	fmt.Println("Sleeping for 10s to wait for pod to spin up")
 	time.Sleep(10000 * time.Millisecond)
 	pod, fetchErr := fetchJobPods(&labelSelector, &context.Namespace)
 	if fetchErr != nil {
 		log.Fatal(fetchErr)
 	}
 
-	log.Printf("Log tailing started on pod %s", pod.Name)
+	fmt.Printf("Log tailing started on pod %s\n", pod.Name)
 	for {
 		time.Sleep(2000 * time.Millisecond)
 		podLog, podLogerr := getPodLogs(*pod)
@@ -232,5 +232,5 @@ func cleanUpJob(job *batchv1.Job, namespace *string) {
 	if deleteErr != nil {
 		log.Fatal(deleteErr)
 	}
-	log.Printf("Successfully delete job...")
+	fmt.Printf("Successfully delete job...")
 }

@@ -43,7 +43,7 @@ func getPVC(pod *apiv1.Pod) *string {
 		for _, volume := range pod.Spec.Volumes {
 			if strings.Contains(volume.Name, "volume-claim") {
 				claimName := volume.VolumeSource.PersistentVolumeClaim.ClaimName
-				log.Printf("Reallocating PVC %s bound to pod %s", claimName, pod.ObjectMeta.Name)
+				fmt.Printf("Reallocating PVC %s bound to pod %s\n", claimName, pod.ObjectMeta.Name)
 				return &claimName
 			}
 		}
@@ -54,7 +54,7 @@ func getPVC(pod *apiv1.Pod) *string {
 func getPods(name *string, namespace *string) (*apiv1.Pod, error) {
 	podClient := clientset.CoreV1().Pods(*namespace)
 	statefulSetSelector := fmt.Sprintf("app.kubernetes.io/instance=%s", *name)
-	log.Printf("Constructing label selector %s", statefulSetSelector)
+	fmt.Printf("Constructing label selector %s\n", statefulSetSelector)
 
 	podList, listErr := podClient.List(metav1.ListOptions{
 		LabelSelector: statefulSetSelector,
@@ -78,7 +78,7 @@ func scaleDown(name *string, namespace *string) error {
 		return getErr
 	}
 
-	log.Printf("Found statefulset %s in namespace %s", *name, *namespace)
+	fmt.Printf("Found statefulset %s in namespace %s\n", *name, *namespace)
 	if *statefulset.Spec.Replicas <= int32(1) {
 		return (fmt.Errorf("Statefulset has %d replicas, which is not enough for migration (at least 2 required)", *statefulset.Spec.Replicas))
 	}
@@ -92,7 +92,7 @@ func scaleDown(name *string, namespace *string) error {
 	if retryErr != nil {
 		return retryErr
 	}
-	log.Printf("Successfully scaled down replicas to %d", *statefulset.Spec.Replicas)
+	fmt.Printf("Successfully scaled down replicas to %d\n", *statefulset.Spec.Replicas)
 	return nil
 }
 
@@ -108,7 +108,6 @@ func Isolate(name *string, namespace *string) *string {
 	if pvcName == nil {
 		log.Fatalf("Failed to find PVC mounted to pod %s", *pvcName)
 	}
-	log.Printf("%s", *pvcName)
 
 	if scaleErr := scaleDown(name, namespace); scaleErr != nil {
 		log.Fatal(scaleErr)

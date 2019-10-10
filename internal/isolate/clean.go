@@ -82,17 +82,18 @@ func cleanUpJob(namespace *string, claimName *string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Master promotion job launched, watching for changes in the cluster")
+	fmt.Println("Master promotion job launched, watching for changes in the cluster")
 	jobChange := watcher.ResultChan()
 
 	for event := range jobChange {
+		fmt.Printf("Job %s: encountered event %v\n", job.Name, event.Type)
 		jobWatch, ok := event.Object.(*batchv1.Job)
 		if !ok {
 			log.Fatal("Unexpected error")
 		}
 
 		status := jobWatch.Status
-		if status.Succeeded >= 1 {
+		if status.Succeeded >= 1 || status.Failed >= 1 || event.Type == "DELETED" {
 			fmt.Println(status.Conditions)
 			fmt.Printf("Deleting job...")
 			deleteErr := jobClient.Delete(job.Name, &metav1.DeleteOptions{})
@@ -100,7 +101,7 @@ func cleanUpJob(namespace *string, claimName *string) {
 			if deleteErr != nil {
 				log.Fatal(deleteErr)
 			}
-			fmt.Printf("Successfully deleted job (Pod is maintained to allow for further log viewing)")
+			fmt.Println("Successfully deleted job (Pod is maintained to allow for further log viewing)")
 			return
 		}
 	}
