@@ -1,5 +1,5 @@
 /*
-Copyright © 2019 NAME HERE <EMAIL ADDRESS>
+Copyright © 2019 ichbinfrog
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ bugs:
 													In the case of Git repositories, the revision can be optionally concatenated with )
 	links: { optional links to cve ref } ( Comma-separated list of links to comprehensive vulnerability information
 												(optional, it must be provided for vulnerabilities not available from the NVD) )
+	description: { optional descriptions }
 `,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
